@@ -26,7 +26,7 @@ export function PriceComparison({ results, loading }: Props) {
 
   if (results.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12">
         <p className="text-sm text-muted-foreground">
           No prices found. Try a manual search.
         </p>

@@ -28,7 +28,7 @@ export function LoadingScanner({ imageData, stage }: LoadingScannerProps) {
 
   return (
     <div className="w-full space-y-8">
-      <div className="text-center">
+      <div>
         <h3 className="text-2xl font-black uppercase tracking-[-0.02em]">
           Identifying
         </h3>
@@ -57,7 +57,7 @@ export function LoadingScanner({ imageData, stage }: LoadingScannerProps) {
       </div>
 
       {/* Status */}
-      <div className="text-center">
+      <div>
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground animate-pulse">
           {MESSAGES[messageIndex]}
         </p>

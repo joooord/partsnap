@@ -93,16 +93,16 @@ export function CameraCapture({ onCapture, disabled }: CameraCaptureProps) {
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col w-full">
       {/* Hero */}
-      <div className="text-center mb-12">
+      <div className="mb-12">
         <h2 className="text-4xl sm:text-5xl font-black tracking-[-0.04em] uppercase leading-none">
           Identify
           <br />
           Any Part
         </h2>
-        <p className="text-sm text-muted-foreground mt-4 max-w-[280px] mx-auto leading-relaxed">
-          Photograph a screw, bolt, nut, or fastener. We&apos;ll tell you exactly what it is.
+        <p className="text-sm text-muted-foreground mt-4 max-w-[280px] leading-relaxed">
+          Photograph a screw, bolt, nut, or fastener and we&apos;ll tell you exactly what it is.
         </p>
       </div>
 
@@ -147,8 +147,8 @@ export function CameraCapture({ onCapture, disabled }: CameraCaptureProps) {
       </div>
 
       {/* Tip */}
-      <p className="text-[11px] text-muted-foreground mt-6 tracking-wide text-center">
-        Good lighting &middot; Plain background &middot; Coin for scale
+      <p className="text-[11px] text-muted-foreground mt-6 tracking-wide">
+        Good lighting / Plain background / Coin for scale
       </p>
     </div>
   );

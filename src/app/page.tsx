@@ -230,19 +230,21 @@ export default function Home() {
           )}
 
         {state.stage === "error" && (
-          <div className="flex flex-col items-center gap-6 py-20 text-center">
+          <div className="flex flex-col gap-6 py-20">
             <h3 className="text-2xl font-black uppercase tracking-tight">
               Failed
             </h3>
             <p className="text-sm text-muted-foreground max-w-xs">
               {state.error}
             </p>
-            <button
-              onClick={() => dispatch({ type: "RESET" })}
-              className="text-sm font-bold uppercase tracking-wider bg-black text-white px-8 py-3 hover:bg-black/80 transition-colors"
-            >
-              Try Again
-            </button>
+            <div>
+              <button
+                onClick={() => dispatch({ type: "RESET" })}
+                className="text-sm font-bold uppercase tracking-wider bg-black text-white px-8 py-3 hover:bg-black/80 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
             <p className="text-[11px] text-muted-foreground tracking-wide">
               Use good lighting, plain background, sharp focus
             </p>
@@ -253,7 +255,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-black py-5">
         <p className="text-center text-[10px] font-medium tracking-[0.3em] uppercase text-muted-foreground">
-          Partsnap &mdash; AI-Powered Part Identification
+          Partsnap / AI-Powered Part Identification
         </p>
       </footer>
     </div>
