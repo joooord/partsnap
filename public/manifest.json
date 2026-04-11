@@ -1,11 +1,11 @@
 {
   "name": "PartSnap",
   "short_name": "PartSnap",
-  "description": "AI-powered part identification. Snap a photo, find the part, get the best price.",
+  "description": "Photograph any fastener. AI identifies it instantly. Find the best price.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#09090b",
-  "theme_color": "#09090b",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "/icon-192.png",

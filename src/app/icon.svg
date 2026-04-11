@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Crosshair circle -->
+  <circle cx="256" cy="256" r="120" fill="none" stroke="#FFFFFF" stroke-width="24"/>
+  <!-- Crosshair lines -->
+  <line x1="256" y1="80" x2="256" y2="180" stroke="#FFFFFF" stroke-width="24"/>
+  <line x1="256" y1="332" x2="256" y2="432" stroke="#FFFFFF" stroke-width="24"/>
+  <line x1="80" y1="256" x2="180" y2="256" stroke="#FFFFFF" stroke-width="24"/>
+  <line x1="332" y1="256" x2="432" y2="256" stroke="#FFFFFF" stroke-width="24"/>
+  <!-- Center dot -->
+  <circle cx="256" cy="256" r="16" fill="#9B7B2C"/>
+</svg>

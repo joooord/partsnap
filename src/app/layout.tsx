@@ -14,10 +14,36 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "https://partsnap-sigma.vercel.app"
+  ),
   title: "PARTSNAP",
   description:
-    "Photograph any part. Identify it instantly. Find the best price.",
+    "Photograph any fastener. AI identifies it instantly. Find the best price.",
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "PARTSNAP",
+    description:
+      "Photograph any fastener. AI identifies it instantly. Find the best price.",
+    siteName: "PartSnap",
+    locale: "en_GB",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PARTSNAP",
+    description:
+      "Photograph any fastener. AI identifies it instantly. Find the best price.",
+  },
 };
 
 export const viewport: Viewport = {
