@@ -10,8 +10,9 @@ interface LoadingScannerProps {
 
 const MESSAGES = [
   "Analysing image",
-  "Detecting part type",
+  "Detecting category",
   "Measuring dimensions",
+  "Matching to standards",
   "Identifying specifications",
 ];
 
@@ -42,7 +43,7 @@ export function LoadingScanner({ imageData, stage }: LoadingScannerProps) {
           className="w-full h-full object-cover opacity-80"
         />
 
-        {/* Scan line — gold accent */}
+        {/* Scan line - gold accent */}
         {stage !== "done" && (
           <div className="absolute inset-0">
             <div className="absolute inset-x-0 h-px bg-gold animate-scan" />

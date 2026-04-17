@@ -1,20 +1,33 @@
+export type PartCategory =
+  | "fastener"
+  | "nut_washer"
+  | "pin_shaft"
+  | "standoff_spacer"
+  | "insert_rivet"
+  | "knob_handle_lever"
+  | "hinge_latch"
+  | "spring"
+  | "circlip_clip"
+  | "magnet"
+  | "bearing_bushing"
+  | "o_ring_seal"
+  | "cable_gland_grommet"
+  | "levelling_foot"
+  | "shaft_collar"
+  | "threaded_rod"
+  | "tool_key"
+  | "other"
+  | "not_a_part";
+
 export interface PartIdentification {
-  partType:
-    | "screw"
-    | "bolt"
-    | "nut"
-    | "washer"
-    | "standoff"
-    | "rivet"
-    | "pin"
-    | "spacer"
-    | "insert"
-    | "spring"
-    | "clip"
-    | "anchor"
-    | "other";
+  /** Broad catalogue category (drives the Accu search path). */
+  category: PartCategory;
+  /** Specific part type, free-form - e.g. "M5 socket cap screw", "star knob", "neodymium pot magnet", "piano hinge". */
+  partType: string;
+  /** Human-readable display name. */
   name: string;
   confidence: "high" | "medium" | "low";
+  /** Fastener-centric structured specs. All nullable - non-fasteners may leave most blank. */
   specs: {
     threadSize: string | null;
     threadPitch: string | null;
@@ -26,8 +39,13 @@ export interface PartIdentification {
     finish: string | null;
     standard: string | null;
   };
+  /** Free-form spec bag for non-fastener attributes (e.g. { "outer diameter": "20mm", "magnet grade": "N35", "hinge leaf width": "40mm" }). */
+  attributes: Record<string, string>;
+  /** 3-5 search queries, most specific first. Used to build Accu search URLs. */
   searchTerms: string[];
   reasoning: string;
+  /** When category is "not_a_part", a cheeky roast about whatever was actually photographed. Null otherwise. */
+  joke: string | null;
 }
 
 export interface AccuProduct {

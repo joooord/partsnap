@@ -101,8 +101,8 @@ export function CameraCapture({ onCapture, disabled }: CameraCaptureProps) {
           <br />
           Any Part
         </h2>
-        <p className="text-sm text-muted-foreground mt-4 max-w-[280px] leading-relaxed">
-          Photograph a screw, bolt, nut, or fastener and we&apos;ll tell you exactly what it is.
+        <p className="text-sm text-muted-foreground mt-4 max-w-[320px] leading-relaxed">
+          Photograph any component - fasteners, magnets, knobs, hinges, bearings, seals - and we&apos;ll identify it and link you straight to the product.
         </p>
       </div>
 
@@ -148,7 +148,7 @@ export function CameraCapture({ onCapture, disabled }: CameraCaptureProps) {
 
       {/* Tip */}
       <p className="text-[11px] text-muted-foreground mt-6 tracking-wide">
-        Good lighting / Plain background / Coin for scale
+        Good lighting &middot; Plain background &middot; Coin or ruler for scale
       </p>
     </div>
   );

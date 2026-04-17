@@ -9,6 +9,8 @@ import { LoadingScanner } from "@/components/loading-scanner";
 import { PartIdentityCard } from "@/components/part-identity-card";
 import { AccuMatchResults } from "@/components/accu-match-card";
 import { PriceComparison } from "@/components/price-comparison";
+import { NotAPartCard } from "@/components/not-a-part-card";
+import { buildAccuSearchUrl } from "@/lib/search/accu-search";
 import type {
   AppState,
   PartIdentification,
@@ -45,14 +47,16 @@ function reducer(state: AppState, action: Action): AppState {
         stage: "identifying",
         imageData: action.imageData,
       };
-    case "IDENTIFY_SUCCESS":
+    case "IDENTIFY_SUCCESS": {
+      const isNotAPart = action.identification.category === "not_a_part";
       return {
         ...state,
         identification: action.identification,
         stage: "results",
-        accuLoading: true,
-        globalLoading: true,
+        accuLoading: !isNotAPart,
+        globalLoading: !isNotAPart,
       };
+    }
     case "ACCU_SUCCESS":
       return { ...state, accuResults: action.results, accuLoading: false };
     case "GLOBAL_SUCCESS":
@@ -90,6 +94,9 @@ export default function Home() {
 
       const identification: PartIdentification = await idRes.json();
       dispatch({ type: "IDENTIFY_SUCCESS", identification });
+
+      // Skip supplier searches when the photo isn't a part
+      if (identification.category === "not_a_part") return;
 
       const searchAccu = fetch("/api/search-accu", {
         method: "POST",
@@ -175,7 +182,19 @@ export default function Home() {
 
         {state.stage === "results" &&
           state.identification &&
-          state.imageData && (
+          state.imageData &&
+          state.identification.category === "not_a_part" && (
+            <NotAPartCard
+              identification={state.identification}
+              imageData={state.imageData}
+              onReset={() => dispatch({ type: "RESET" })}
+            />
+          )}
+
+        {state.stage === "results" &&
+          state.identification &&
+          state.imageData &&
+          state.identification.category !== "not_a_part" && (
             <div className="space-y-8">
               <Tabs defaultValue="identify" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 bg-transparent border-b border-black p-0 h-auto gap-0">
@@ -209,6 +228,9 @@ export default function Home() {
                   <PartIdentityCard
                     identification={state.identification}
                     imageData={state.imageData}
+                    topAccuMatch={state.accuResults[0] ?? null}
+                    accuSearchUrl={buildAccuSearchUrl(state.identification)}
+                    accuLoading={state.accuLoading}
                   />
                 </TabsContent>
 

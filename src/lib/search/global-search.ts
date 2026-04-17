@@ -1,14 +1,14 @@
 import type { PartIdentification, GlobalPrice } from "../types";
+import { buildPartSearchQuery } from "./accu-search";
 
 export async function searchGlobalPrices(
   identification: PartIdentification
 ): Promise<GlobalPrice[]> {
-  const query = buildSearchQuery(identification);
+  const query = buildPartSearchQuery(identification);
   const apiKey = process.env.SERPAPI_API_KEY;
 
   if (!apiKey) {
-    // Fallback: return direct search links
-    return generateSearchLinks(identification);
+    return generateSearchLinks(identification, query);
   }
 
   try {
@@ -19,29 +19,21 @@ export async function searchGlobalPrices(
     url.searchParams.set("num", "10");
     url.searchParams.set("gl", "gb");
 
-    const response = await fetch(url.toString());
+    const response = await fetch(url.toString(), {
+      signal: AbortSignal.timeout(10_000),
+    });
     if (!response.ok) {
       throw new Error(`SerpApi error: ${response.status}`);
     }
 
     const data = await response.json();
-    return parseShoppingResults(data);
+    const results = parseShoppingResults(data);
+    if (results.length > 0) return results;
   } catch (error) {
     console.error("Global search error:", error);
-    return generateSearchLinks(identification);
   }
-}
 
-function buildSearchQuery(id: PartIdentification): string {
-  const parts: string[] = [];
-  if (id.specs.threadSize) parts.push(id.specs.threadSize);
-  if (id.specs.length) parts.push(id.specs.length);
-  if (id.specs.headType) parts.push(id.specs.headType.replace("socket cap", "socket cap head"));
-  if (id.partType !== "other") parts.push(id.partType);
-  if (id.specs.material) parts.push(id.specs.material);
-  if (id.specs.standard) parts.push(id.specs.standard);
-
-  return parts.length > 0 ? parts.join(" ") : id.searchTerms[0] || id.name;
+  return generateSearchLinks(identification, query);
 }
 
 interface ShoppingResult {
@@ -54,7 +46,9 @@ interface ShoppingResult {
   currency?: string;
 }
 
-function parseShoppingResults(data: { shopping_results?: ShoppingResult[] }): GlobalPrice[] {
+function parseShoppingResults(data: {
+  shopping_results?: ShoppingResult[];
+}): GlobalPrice[] {
   if (!data.shopping_results) return [];
 
   return data.shopping_results
@@ -73,19 +67,40 @@ function parseShoppingResults(data: { shopping_results?: ShoppingResult[] }): Gl
 }
 
 function generateSearchLinks(
-  identification: PartIdentification
+  identification: PartIdentification,
+  query: string
 ): GlobalPrice[] {
-  const query = buildSearchQuery(identification);
   const encodedQuery = encodeURIComponent(query);
+  const isFastener =
+    identification.category === "fastener" ||
+    identification.category === "nut_washer" ||
+    identification.category === "threaded_rod";
 
-  const suppliers = [
+  // Curated UK-first supplier list, relevant to Accu's catalogue
+  const suppliers: { name: string; url: string }[] = [
     {
-      name: "Google Shopping",
-      url: `https://www.google.co.uk/search?tbm=shop&q=${encodedQuery}`,
+      name: "Accu",
+      url: `https://www.accu.co.uk/en/search?q=${encodedQuery}`,
     },
     {
       name: "RS Components",
       url: `https://uk.rs-online.com/web/c/?searchTerm=${encodedQuery}`,
+    },
+    {
+      name: "Farnell UK",
+      url: `https://uk.farnell.com/search?st=${encodedQuery}`,
+    },
+    {
+      name: "Zoro UK",
+      url: `https://www.zoro.co.uk/search?q=${encodedQuery}`,
+    },
+    {
+      name: "Screwfix",
+      url: `https://www.screwfix.com/search?search=${encodedQuery}`,
+    },
+    {
+      name: "Toolstation",
+      url: `https://www.toolstation.com/search?q=${encodedQuery}`,
     },
     {
       name: "Amazon UK",
@@ -96,14 +111,21 @@ function generateSearchLinks(
       url: `https://www.ebay.co.uk/sch/i.html?_nkw=${encodedQuery}`,
     },
     {
-      name: "Bolt Depot",
-      url: `https://www.boltdepot.com/search.aspx?q=${encodedQuery}`,
+      name: "Google Shopping",
+      url: `https://www.google.co.uk/search?tbm=shop&q=${encodedQuery}`,
     },
   ];
 
+  if (isFastener) {
+    suppliers.push({
+      name: "Bolt Depot",
+      url: `https://www.boltdepot.com/search.aspx?q=${encodedQuery}`,
+    });
+  }
+
   return suppliers.map((s) => ({
     supplier: s.name,
-    productName: `Search for: ${identification.name}`,
+    productName: `Search ${s.name}: ${identification.name}`,
     productUrl: s.url,
     unitPrice: 0,
     currency: "GBP",
